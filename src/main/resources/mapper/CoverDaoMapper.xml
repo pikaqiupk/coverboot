@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.tcbd.coverboot.dao.CoverDao">
+
+    <!-- 根据主键查询
+    <resultMap id="getByPosition" type="com.tcbd.coverboot.entity.Coverbd"  >
+        <id column="ID" property="id" />
+        <result column="IMEI" property="imei" />
+        <result column="Name" property="name" />
+        <result column="SensorStatus" property="sensorStatus" />
+        <result column="SysTime" property="sysTime" />
+        <result column="Longitude" property="longitude" />
+        <result column="Latitude" property="latitude" />
+        <result column="Position" property="position" />
+    </resultMap>
+
+    <select id="getByPosition" resultType="com.tcbd.coverboot.entity.Coverbd" parameterType="java.lang.String" >
+        select RTRIM(ID) ID,RTRIM(IMEI) IMEI,RTRIM(Name) Name,RTRIM(SensorStatus) SensorStatus,
+        RTRIM(SysTime) SysTime,RTRIM(Longitude) Longitude,RTRIM(Latitude) Latitude,RTRIM(Position) [Position]
+        from CoverTB_RealTime
+        where Position = #{Position}
+    </select>
+    -->
+    <!--插入更新状态数据-->
+    <insert id="insertDeviceHistory" useGeneratedKeys="true" keyProperty="IMEI">
+        insert into devicehistory (Id,IMEI,CCID,IMSI,SINR,RSRP,PCI,ECL,CELLID,BatteryVoltage,BatteryValue,PosTime,Protocol)
+        values (#{Id},#{IMEI},#{CCID},#{IMSI},#{SINR},#{RSRP},#{PCI},#{ECL},#{CELLID},#{BatteryVoltage},#{BatteryValue},#{PosTime},#{Protocol});
+    </insert>
+
+    <insert id="insertDeviceAlarm" useGeneratedKeys="true" keyProperty="IMEI">
+        insert into devicealarm (Id,IMEI,EnumAlarm,AlarmTime,AlarmContent)
+        values (#{Id},#{IMEI},#{EnumAlarm},#{AlarmTime},#{AlarmContent});
+    </insert>
+
+    <update id="updateDeviceHistory" parameterType="com.tcbd.coverboot.entity.Coverbd">
+        update devicehistory
+        <set>
+            <if test="BatteryVoltage != null">BatteryVoltage=#{BatteryVoltage},</if>
+            <if test="BatteryValue != null">BatteryValue=#{BatteryValue},</if>
+            <if test="EnumPositionState != null">EnumPositionState=#{EnumPositionState},</if>
+            <if test="EnumOpenState != null">EnumOpenState=#{EnumOpenState},</if>
+            <if test="LeanAngle != null">LeanAngle=#{LeanAngle},</if>
+            <if test="PosTime != null">PosTime=#{PosTime}</if>
+        </set>
+        where IMEI=#{IMEI} ORDER BY PosTime DESC LIMIT 1
+    </update>
+
+
+    <insert id="insertOrUpdateDeviceCurrent">
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            select count(*) from devicecurrent where IMEI = #{IMEI}
+        </selectKey>
+        <if test="count > 0">
+            update devicecurrent
+            <set>
+                <if test="SINR!= null" >
+                    SINR= #{SINR},
+                </if>
+                <if test="RSRP!= null" >
+                    RSRP= #{RSRP},
+                </if>
+                <if test="PCI!= null" >
+                    PCI= #{PCI},
+                </if>
+                <if test="ECL!= null" >
+                    ECL= #{ECL},
+                </if>
+                <if test="CELLID!= null" >
+                    CELLID= #{CELLID},
+                </if>
+                <if test="BatteryVoltage!= null" >
+                    BatteryVoltage= #{BatteryVoltage},
+                </if>
+                <if test="BatteryValue!= null" >
+                    BatteryValue= #{BatteryValue},
+                </if>
+                <if test="EnumPositionState!= null" >
+                    EnumPositionState= #{EnumPositionState},
+                </if>
+                <if test="EnumOpenState!= null" >
+                    EnumOpenState= #{EnumOpenState},
+                </if>
+                <if test="LeanAngle!= null" >
+                    LeanAngle= #{LeanAngle},
+                </if>
+                <if test="CreateTime!= null" >
+                    CreateTime= #{CreateTime}
+                </if>
+            </set>
+            <where>
+                IMEI = #{IMEI}
+            </where>
+        </if>
+        <if test="count==0">
+            insert into devicecurrent (Id,IMEI,CCID,IMSI,SINR,RSRP,PCI,ECL,CELLID,BatteryVoltage,BatteryValue,CreateTime,Protocol)
+            values (#{Id},#{IMEI},#{CCID},#{IMSI},#{SINR},#{RSRP},#{PCI},#{ECL},#{CELLID},#{BatteryVoltage},#{BatteryValue},#{CreateTime},#{Protocol});
+        </if>
+    </insert>
+</mapper>
