@@ -5,20 +5,17 @@ import com.tcbd.coverboot.entity.Alarmbd;
 import com.tcbd.coverboot.entity.Coverbd;
 import com.tcbd.coverboot.service.CoverService;
 import com.tcbd.coverboot.util.SnowflakeIdWorker;
-import org.apache.catalina.filters.ExpiresFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List; 
+
 
 @RestController
 @RequestMapping("/hello")
@@ -45,12 +42,12 @@ public class  CoverController {
                 sb.append(temp);
             }
             br.close();
-            //真正接收到的数据
-            //String result = sb.toString();
+            //接收数据
+            String result = sb.toString();
             //System.out.println("接收:"+result);
             //测试的数据
             //String result = "{\"upPacketSN\":-1,\"upDataSN\":-1,\"topic\":\"v1/up/ad19\",\"timestamp\":1602745069687,\"tenantId\":\"2000015719\",\"serviceId\":3,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"payload\":{\"terminal_type\":\"TLJJ-2520\",\"software_version\":\"B3.5\",\"sinr\":300,\"rsrp\":-818,\"pci\":65,\"manufacturer_name\":\"TengLian\",\"heartbeat_time\":10.0,\"hardware_version\":\"VB01\",\"ecl\":0,\"cell_id\":99326931,\"battery_voltage\":3.640625,\"battery_value\":100,\"IMSI\":\"460113049459669\",\"IMEI\":\"861878041066389\",\"ICCID\":\"89861120204002343376\"},\"messageType\":\"dataReport\",\"deviceType\":\"\",\"deviceId\":\"df5bc90025bd4985a4320e964b424c77\",\"assocAssetId\":\"\",\"IMSI\":\"undefined\",\"IMEI\":\"861878041066389\"}";
-            String result = "{\"upPacketSN\":-1,\"upDataSN\":-1,\"topic\":\"v1/up/ad19\",\"timestamp\":1602745069687,\"tenantId\":\"2000015719\",\"serviceId\":4,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"payload\":{\"manhole_cover_position_state\":1,\"manhole_cover_open_state\":0,\"lean_angle\":82,\"battery_voltage\":3.640625,\"battery_value\":90},\"messageType\":\"dataReport\",\"deviceType\":\"\",\"deviceId\":\"df5bc90025bd4985a4320e964b424c77\",\"assocAssetId\":\"\",\"IMSI\":\"undefined\",\"IMEI\":\"861878041066389\"}\n";
+            //String result = "{\"upPacketSN\":-1,\"upDataSN\":-1,\"topic\":\"v1/up/ad19\",\"timestamp\":1602745069687,\"tenantId\":\"2000015719\",\"serviceId\":4,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"payload\":{\"manhole_cover_position_state\":1,\"manhole_cover_open_state\":0,\"lean_angle\":82,\"battery_voltage\":3.640625,\"battery_value\":90},\"messageType\":\"dataReport\",\"deviceType\":\"\",\"deviceId\":\"df5bc90025bd4985a4320e964b424c77\",\"assocAssetId\":\"\",\"IMSI\":\"undefined\",\"IMEI\":\"861878041066389\"}\n";
             //String result ="{\"timestamp\":1602490249041,\"tenantId\":\"2000015719\",\"serviceId\":1001,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"messageType\":\"eventReport\",\"eventType\":2,\"eventContent\":{\"manhole_cover_position_state\":1},\"deviceSn\":\"\",\"deviceId\":\"860e372828a641c4ae4584fc5e21c3e3\",\"IMSI\":\"undefined\",\"IMEI\":\"868474046693741\"}";
             //String result ="{\"timestamp\":1602490250321,\"tenantId\":\"2000015719\",\"serviceId\":1003,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"messageType\":\"eventReport\",\"eventType\":2,\"eventContent\":{\"water_level_state\":1},\"deviceSn\":\"\",\"deviceId\":\"860e372828a641c4ae4584fc5e21c3e3\",\"IMSI\":\"undefined\",\"IMEI\":\"868474046693741\"}";
             //String result ="{\"timestamp\":1602490348034,\"tenantId\":\"2000015719\",\"serviceId\":1004,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"messageType\":\"eventReport\",\"eventType\":2,\"eventContent\":{\"manhole_cover_open_state\":1},\"deviceSn\":\"\",\"deviceId\":\"860e372828a641c4ae4584fc5e21c3e3\",\"IMSI\":\"undefined\",\"IMEI\":\"868474046693741\"}";
