@@ -11,7 +11,7 @@ public class WebController {
     @RequestMapping("/begin")
     @ResponseBody
     private String toIndex() {
-        return "接收程序启动！！";
+        return "接收程序启动...";
 
     }
 }
