@@ -14,7 +14,9 @@ public class Alarmbd {
     protected  String AlarmContent;     //警报内容
 
     protected  String EnumAlarmState;   //警报状态
-    protected  String CreatTime;        //
+    protected  String CreateTime;        //
+    protected  String UpdateTime;       //
+
 
 
     public Alarmbd(){}
@@ -76,12 +78,20 @@ public class Alarmbd {
         EnumAlarmState = enumAlarmState;
     }
 
-    public String getCreatTime() {
-        return CreatTime;
+    public String getCreateTime() {
+        return CreateTime;
     }
 
-    public void setCreatTime(String creatTime) {
-        CreatTime = creatTime;
+    public void setCreateTime(String createTime) {
+        CreateTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return UpdateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        UpdateTime = updateTime;
     }
 
     @Override
@@ -93,7 +103,7 @@ public class Alarmbd {
                 ", AlarmTime='" + AlarmTime + '\'' +
                 ", AlarmContent='" + AlarmContent + '\'' +
                 ", EnumAlarmState='" + EnumAlarmState + '\'' +
-                ", CreatTime='" + CreatTime + '\'' +
+                ", CreatTime='" + CreateTime + '\'' +
                 '}';
     }
 }

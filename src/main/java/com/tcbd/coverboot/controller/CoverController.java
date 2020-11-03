@@ -44,15 +44,9 @@ public class  CoverController {
             br.close();
             //接收数据
             String result = sb.toString();
-            //System.out.println("接收:"+result);
-            //测试的数据
-            //String result = "{\"upPacketSN\":-1,\"upDataSN\":-1,\"topic\":\"v1/up/ad19\",\"timestamp\":1602745069687,\"tenantId\":\"2000015719\",\"serviceId\":3,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"payload\":{\"terminal_type\":\"TLJJ-2520\",\"software_version\":\"B3.5\",\"sinr\":300,\"rsrp\":-818,\"pci\":65,\"manufacturer_name\":\"TengLian\",\"heartbeat_time\":10.0,\"hardware_version\":\"VB01\",\"ecl\":0,\"cell_id\":99326931,\"battery_voltage\":3.640625,\"battery_value\":100,\"IMSI\":\"460113049459669\",\"IMEI\":\"861878041066389\",\"ICCID\":\"89861120204002343376\"},\"messageType\":\"dataReport\",\"deviceType\":\"\",\"deviceId\":\"df5bc90025bd4985a4320e964b424c77\",\"assocAssetId\":\"\",\"IMSI\":\"undefined\",\"IMEI\":\"861878041066389\"}";
-            //String result = "{\"upPacketSN\":-1,\"upDataSN\":-1,\"topic\":\"v1/up/ad19\",\"timestamp\":1602745069687,\"tenantId\":\"2000015719\",\"serviceId\":4,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"payload\":{\"manhole_cover_position_state\":1,\"manhole_cover_open_state\":0,\"lean_angle\":82,\"battery_voltage\":3.640625,\"battery_value\":90},\"messageType\":\"dataReport\",\"deviceType\":\"\",\"deviceId\":\"df5bc90025bd4985a4320e964b424c77\",\"assocAssetId\":\"\",\"IMSI\":\"undefined\",\"IMEI\":\"861878041066389\"}\n";
-            //String result ="{\"timestamp\":1602490249041,\"tenantId\":\"2000015719\",\"serviceId\":1001,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"messageType\":\"eventReport\",\"eventType\":2,\"eventContent\":{\"manhole_cover_position_state\":1},\"deviceSn\":\"\",\"deviceId\":\"860e372828a641c4ae4584fc5e21c3e3\",\"IMSI\":\"undefined\",\"IMEI\":\"868474046693741\"}";
-            //String result ="{\"timestamp\":1602490250321,\"tenantId\":\"2000015719\",\"serviceId\":1003,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"messageType\":\"eventReport\",\"eventType\":2,\"eventContent\":{\"water_level_state\":1},\"deviceSn\":\"\",\"deviceId\":\"860e372828a641c4ae4584fc5e21c3e3\",\"IMSI\":\"undefined\",\"IMEI\":\"868474046693741\"}";
-            //String result ="{\"timestamp\":1602490348034,\"tenantId\":\"2000015719\",\"serviceId\":1004,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"messageType\":\"eventReport\",\"eventType\":2,\"eventContent\":{\"manhole_cover_open_state\":1},\"deviceSn\":\"\",\"deviceId\":\"860e372828a641c4ae4584fc5e21c3e3\",\"IMSI\":\"undefined\",\"IMEI\":\"868474046693741\"}";
-
-
+            System.out.println("接收:"+result);
+            //测试的数
+            //String result = "{\"upPacketSN\":-1,\"upDataSN\":-1,\"topic\":\"v1/up/ad19\",\"timestamp\":1603901235231,\"tenantId\":\"2000015719\",\"serviceId\":4,\"protocol\":\"lwm2m\",\"productId\":\"10095421\",\"payload\":{\"manhole_cover_position_state\":0,\"manhole_cover_open_state\":0,\"lean_angle\":0,\"battery_voltage\":3.625,\"battery_value\":100},\"messageType\":\"dataReport\",\"deviceType\":\"\",\"deviceId\":\"c71640dcca1145ddbcbd358c55720969\",\"assocAssetId\":\"\",\"IMSI\":\"undefined\",\"IMEI\":\"862675057148971\"}";
             JSONObject json = JSONObject.parseObject(result);
             String serviceId = json.getString("serviceId");
 
@@ -96,13 +90,17 @@ public class  CoverController {
                 coverbd.setId(id);
                 //System.out.println(Long.toBinaryString(id));
 
-                int i = coverService.insertDeviceHistory(coverbd);
-                int j = coverService.updateDeviceCurrent(coverbd);
-                if(i!=0){
-                    logger.info("INSERT DEVICEHISTORY SUCCESS");
-                }
-                if(j!=0){
-                    logger.info("UPDATE DEVICECURRENT SUCCESS");
+                try{
+                    int i = coverService.insertDeviceHistory(coverbd);
+                    int j = coverService.updateDeviceCurrent(coverbd);
+                    if(i!=0){
+                        logger.info("SERVICEID 3 INSERT DEVICEHISTORY SUCCESS");
+                    }
+                    if(j!=0){
+                        logger.info("SERVICEID 3 UPDATE DEVICECURRENT SUCCESS");
+                    }
+                }catch (Exception e){
+                    System.out.println("异常1"+e.toString());
                 }
 
             }
@@ -128,14 +126,18 @@ public class  CoverController {
                 coverbd.setBatteryVoltage(battery_voltage);
                 coverbd.setPosTime(stampToDate(postime));
                 coverbd.setCreateTime(stampToDate(postime));
+                try{
+                    int i = coverService.updateDeviceHistory(coverbd);
+                    int j = coverService.updateDeviceCurrent(coverbd);
+                    if(j!=0){
+                        logger.info("SERVICEID 4 UPDATE DEVICECURRENT SUCCESS");
+                    }
+                    if(i!=0){
+                        logger.info("SERVICEID 4 UPDATE DEVICEHISTORY SUCCESS");
+                    }
 
-                int i = coverService.updateDeviceHistory(coverbd);
-                int j = coverService.updateDeviceCurrent(coverbd);
-                if(j!=0){
-                    logger.info("UPDATE DEVICECURRENT SUCCESS");
-                }
-                if(i!=0){
-                    logger.info("UPDATE DEVICEHISTORY SUCCESS");
+                }catch (Exception e){
+                    System.out.println("异常2"+e.toString());
                 }
 
             }
@@ -151,11 +153,19 @@ public class  CoverController {
                 alarmbd.setEnumAlarm(jsonchild.getString("manhole_cover_position_state"));
                 alarmbd.setAlarmContent("manhole_cover_position_state");
                 alarmbd.setAlarmTime(stampToDate(json.getString("timestamp")));
+                alarmbd.setCreateTime(stampToDate(json.getString("timestamp")));
+                alarmbd.setUpdateTime(stampToDate(json.getString("timestamp")));
 
-                int i = coverService.insertDeviceAlarm(alarmbd);
-                if(i!=0){
-                    logger.info("INSERT DEVICEALARM SUCCESS");
+                try{
+                    int i = coverService.insertDeviceAlarm(alarmbd);
+                    if(i!=0){
+                        logger.info("SERVICEID  1001 INSERT DEVICEALARM SUCCESS");
+                    }
+
+                }catch (Exception e){
+                    System.out.println("异常3"+e.toString());
                 }
+
             }
             if(serviceId.equals("1003")){
                 JSONObject jsonchild = json.getJSONObject("eventContent");
@@ -168,10 +178,17 @@ public class  CoverController {
                 alarmbd.setEnumAlarm(jsonchild.getString("water_level_state"));
                 alarmbd.setAlarmContent("water_level_state");
                 alarmbd.setAlarmTime(stampToDate(json.getString("timestamp")));
+                alarmbd.setCreateTime(stampToDate(json.getString("timestamp")));
+                alarmbd.setUpdateTime(stampToDate(json.getString("timestamp")));
 
-                int i = coverService.insertDeviceAlarm(alarmbd);
-                if(i!=0){
-                    logger.info("INSERT DEVICEALARM SUCCESS");
+                try{
+                    int i = coverService.insertDeviceAlarm(alarmbd);
+                    if(i!=0){
+                        logger.info("SERVICEID 1003 INSERT DEVICEALARM SUCCESS");
+                    }
+
+                }catch (Exception e){
+                    System.out.println("异常4"+e.toString());
                 }
 
             }
@@ -186,12 +203,18 @@ public class  CoverController {
                 alarmbd.setEnumAlarm(jsonchild.getString("manhole_cover_open_state"));
                 alarmbd.setAlarmContent("manhole_cover_open_state");
                 alarmbd.setAlarmTime(stampToDate(json.getString("timestamp")));
+                alarmbd.setCreateTime(stampToDate(json.getString("timestamp")));
+                alarmbd.setUpdateTime(stampToDate(json.getString("timestamp")));
 
-                int i = coverService.insertDeviceAlarm(alarmbd);
-                if(i!=0){
-                    logger.info("INSERT DEVICEALARM SUCCESS");
+                try{
+                    int i = coverService.insertDeviceAlarm(alarmbd);
+                    if(i!=0){
+                        logger.info("SERVICEID 1004 INSERT DEVICEALARM SUCCESS");
+                    }
+
+                }catch (Exception e){
+                    System.out.println("异常5"+e.toString());
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();

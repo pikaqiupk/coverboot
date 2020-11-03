@@ -29,8 +29,8 @@
     </insert>
 
     <insert id="insertDeviceAlarm" useGeneratedKeys="true" keyProperty="IMEI">
-        insert into devicealarm (Id,IMEI,EnumAlarm,AlarmTime,AlarmContent)
-        values (#{Id},#{IMEI},#{EnumAlarm},#{AlarmTime},#{AlarmContent});
+        insert into devicealarm (Id,IMEI,EnumAlarm,AlarmTime,AlarmContent,CreateTime,UpdateTime)
+        values (#{Id},#{IMEI},#{EnumAlarm},#{AlarmTime},#{AlarmContent},#{CreateTime},#{UpdateTime});
     </insert>
 
     <update id="updateDeviceHistory" parameterType="com.tcbd.coverboot.entity.Coverbd">

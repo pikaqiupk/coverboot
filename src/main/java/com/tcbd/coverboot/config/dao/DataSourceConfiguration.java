@@ -32,6 +32,8 @@ public class  DataSourceConfiguration {
         dataSource.setPassword(jdbcPassword);
         //关闭连接后不自动commit
         dataSource.setAutoCommitOnClose(false);
+        //最大空闲时间 超时连接丢弃
+        dataSource.setMaxIdleTime(3600);
         return dataSource;
     }
 }
